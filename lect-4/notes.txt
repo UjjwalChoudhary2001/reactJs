@@ -1,0 +1,134 @@
+useEffect hook is used for giving side effects.
+We use this hook when:
+
+When the component loads and we want to fetch data from DB.
+
+We clicked on useEffect snippet and got:
+
+useEffect(() => {
+    first
+  
+    return () => {
+      second
+    }
+  }, [third])
+  
+We made the modifications to get the basic snippet of useEffect:-
+
+useEffect(() => {
+    first
+  }, []) //The array contains the state variable on changing of which the useEffect hook runs.
+  
+
+//Inside App.jsx , to get an alert when the webpage loads.
+useEffect(()=>{
+alert("Hello welcome to my page");
+},[])
+
+useEffect hook works on mounting of a component, so above useEffect will work when 
+App.jsx mounts on the browser.
+
+//This will be executed when count will be changed including when the count is initialised.
+useEffect(() => {
+    alert("Count was changed");
+  }, [count]);
+
+/*
+ When we reload the page we get above alerts 2 times each,because the strict
+ mode is on which can be seen in main.jsx
+
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+
+  So to prevent it we can comment line 33 and line 35. Because StrictMode runs your code 2 times
+  in development and not in production. So we can comment it out. 
+*/
+
+We created a Navbar.jsx file with
+
+import React from "react";
+
+const Navbar = ({ color }) => {
+  return <div>I am Navbar of {color} color</div>;
+};
+
+export default Navbar;
+
+The above color prop will come from App.jsx
+      <Navbar color={"Navy " + "Blue"} />
+
+We can also ignore the '{}' and write "Navy Blue" as its a valid string
+but the advantage of '{}' is that we can concatenate strings.
+
+
+Flow when we click on count button:
+
+1. The state count gets changed as per below line
+
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+
+2.Due to this the whole component <> </> gets rerendered which also renders navbar , 
+the rerendering of <></> causes the below useEffect to run.
+
+useEffect(() => {
+    alert("Run on every render");
+  });
+
+3.Due to click on count button , below useEffect gets executed.
+
+useEffect(() => {
+    alert("Count was changed");
+    setColor(color + 1); //Will lead to rerendering of navbar.
+  }, [count]);
+
+4. The above useEffect also changes the color state which leads to rerendering of Navbar and hence the below useEffect 
+runs again.
+
+useEffect(() => {
+    alert("Run on every render");
+  });
+
+  and as color state is changed below useEffect also runs.
+
+  useEffect(() => {
+    alert("The color was changed");
+  }, [color]);
+
+
+Flow when we reload the webpage:
+
+All the 3 useEffects within Navbar.jsx will run ie:
+
+case1,case2 and case3 , case3 runs because color is set to 0 ie color state gets changed.
+
+Thus rendering of Navbar has been completed.
+
+Now the following code runs inside App.jsx:
+
+The count state is initialised with zero and thus below useEffect runs:
+
+useEffect(() => {
+    alert("Count was changed");
+    setColor(color + 1); //Will lead to rerendering of navbar.
+  }, [count]);
+
+Thus rerendering of Navbar occurs as setColor changes the state 'color' in the above useEffect.
+
+Due to  rerendering of Navar.jsx case1 and case3 will run again.
+
+
+UseEffect Cleanup function:-
+
+useEffect(() => {
+    alert("Hey welcome to my page.This is first render of app.jsx");
+    return () => {
+      alert("Component was unmounted");
+    };
+  }, []);
+
+When we comment out the Navbar in app.jsx then the above alert is shown.
+Thus on unmounting of a component we can perform an action inside the return function of 
+useEffect hook. For eg: On unmounting of a component we can remove connection from a DB. 

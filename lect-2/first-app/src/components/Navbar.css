@@ -1,0 +1,17 @@
+nav,
+ul {
+  display: flex;
+}
+
+li {
+  list-style: none;
+  /* border: 1px solid black; */
+}
+
+ul {
+  gap: 34px;
+}
+
+nav {
+  background-color: beige;
+}
